@@ -112,6 +112,7 @@ content:
 
       <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
         <img src="images/toto.jpg" alt="toto" title="toto" width="500">
+        <img src="images/pineapple.jpg" alt="pineapple" title="pineapple" width="300">
       </div>
 
 # Footer
