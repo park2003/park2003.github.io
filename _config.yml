@@ -109,7 +109,7 @@ content:
       - [Becoming a ninja](https://www.youtube.com/watch?v=vtg4o__aRMg)
 
       Look at this cool image  
-      ![Trees](images/landscape-trees.jpg "Trees")
+      <img src="images/landscape-trees.jpg" alt="Trees" title="Trees" width="300">
 
 # Footer
 footer_show_references: true
