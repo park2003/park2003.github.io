@@ -111,9 +111,12 @@ content:
       Look at these cool images!  
       <div style="display: flex; justify-content: center; gap: 20px;">
         <img src="images/landscape-trees.jpg" alt="Trees" title="Trees" width="300">
-        <img src="images/toto.jpg" alt="toto" title="toto" width="300">
         <img src="images/gatsby.jpg" alt="gatsby" title="gatsby" width="300">
         <img src="images/italia.jpg" alt="italia" title="italia" width="300">
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 20px;">
+        <img src="images/toto.jpg" alt="toto" title="toto" width="500">
       </div>
 
 # Footer
