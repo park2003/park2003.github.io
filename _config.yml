@@ -91,21 +91,18 @@ content:
         title: University of Washington
         caption: 2022 - 2023, 2025 - Present
         sub_title: BSc Computer Science
-        quote: >
-          Established in 1636, Harvard is the oldest higher education institution in the United States, and is widely regarded in terms of its influence, reputation, and academic pedigree as a leading university in not just the US but also the world.
+        # quote: >
+          # Established in 1636, Harvard is the oldest higher education institution in the United States, and is widely regarded in terms of its influence, reputation, and academic pedigree as a leading university in not just the US but also the world.
         description: | # this will include new lines to allow paragraphs
-          During my time at Harvard I learnt most of my key skills that have I have taken through my career such as teamwork and working to tight deadlines. I thouroughly enjoyed my time as university and learnt a lot about a healthy work life balance.
-
-          I spent a lot of my free time as a committee member of the *Harvard Mountaineering Club* taking on roles such as *Trip Secretary* and *Vice-President*.
+         I am currently studying computer engineering and Physics at the University of Washington.
 
   - title: A Little More About Me
     layout: text
     content: | # this will include new lines to allow paragraphs
       Alongside my interests in networks and software engineering some of my other interests and hobbies are:
-      - Rock climbing
-      - Gaming
-      - Knitting
-      - [Becoming a ninja](https://www.youtube.com/watch?v=vtg4o__aRMg)
+      - Quantum Computing
+      - Traveling
+      - Wathcing Movies
 
       Look at these cool images!  
       <div style="display: flex; justify-content: center; gap: 20px;">
@@ -114,7 +111,7 @@ content:
         <img src="images/italia.jpg" alt="italia" title="italia" width="300">
       </div>
 
-      <div style="display: flex; justify-content: center; gap: 20px;">
+      <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
         <img src="images/toto.jpg" alt="toto" title="toto" width="500">
       </div>
 
