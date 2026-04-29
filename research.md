@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Research
-permalink: /research/
 ---
 
 # Quantum Computing Research
@@ -13,4 +12,3 @@ Welcome to my dedicated research page!
 - **Algorithm Analysis**: Investigating novel ways to optimize cloud infrastructure for quantum workloads.
 
 <br>
-
