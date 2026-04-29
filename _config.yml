@@ -32,7 +32,7 @@ linkedin_username: jewoopark
 additional_links:
 - title: Research
   icon: fas fa-flask
-  url: /research.html
+  url: /research
 
 # Google Analytics and Tag Manager
 # Using more than one of these may cause issues with reporting
