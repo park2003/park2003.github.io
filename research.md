@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Research
+permalink: /research/
 ---
 
 # Quantum Computing Research
