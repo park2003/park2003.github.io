@@ -9,7 +9,7 @@ version: 2
 name: Jewoo Park
 title: Software Engineer & Quantum Computing Enthusiast
 email: jewoopark03@gmail.com
-website: www.github.com/sproogen/resume-theme
+website: https://park2003.github.io/
 
 # Dark Mode (true/false/never)
 darkmode: true
@@ -29,13 +29,10 @@ linkedin_username: jewoopark
 # orcid_username: 0000-0000-0000-0000
 
 # Additional icon links
-# additional_links:
-# - title: itsgoingto.be
-#   icon: fas fa-globe
-#   url: https://www.itsgoingto.be
-# - title: another link
-#   icon: font awesome brand icon name (eg. fab fa-twitter) (https://fontawesome.com/icons?d=gallery&m=free)
-#   url: Link url (eg. https://google.com)
+additional_links:
+- title: Research
+  icon: fas fa-flask
+  url: /research/
 
 # Google Analytics and Tag Manager
 # Using more than one of these may cause issues with reporting
@@ -49,7 +46,7 @@ about_profile_image: images/profile.jpg
 about_content: | # this will include new lines to allow paragraphs
   Hi, my name's Jewoo and I'm a software engineer and quantum computing enthusiast. As well as developing software I also have experience in quantum computing research. I have worked at a number of companies gaining teamwork and leadership skills.
 
-  I am most skilled in: <mark>AWS</mark> and <mark>Reading interesting Quantum paper</mark>
+  I am most skilled in: <mark>AWS</mark> and <mark>Reading interesting Quantum papers</mark>
 
 content:
   - title: Projects # Title for the section
@@ -82,7 +79,7 @@ content:
         # quote: >
           # Solving 21st century problems by diging holes and making game changing products like the *not a flamethrower*
         description: | # this will include new lines to allow paragraphs
-            I am working as a software engineer Amazon and have been here for a year. I have worked on a number of projects and have gained a lot of experience in cloud computing and software development. I have also had the opportunity to work with some amazing people and have learned a lot from them.
+            I am working as a software engineer at Amazon and have been here for a year. I have worked on a number of projects and have gained a lot of experience in cloud computing and software development. I have also had the opportunity to work with some amazing people and have learned a lot from them.
   - title: Education # Title for the section
     layout: list # Type of content section (list/text)
     content:
@@ -101,7 +98,7 @@ content:
       Alongside my interests in networks and software engineering some of my other interests and hobbies are:
       - Quantum Computing
       - Traveling
-      - Wathcing Movies
+      - Watching Movies
 
       Look at these cool images!  
       <div style="display: flex; justify-content: center; gap: 20px;">
