@@ -82,21 +82,11 @@ section.stage{padding:56px 0 8px}
 .fig .plate{background:var(--plate);border:1px solid var(--line);border-radius:4px;overflow:hidden}
 .fig img{display:block;width:100%;height:auto;max-width:100%}
 .fig .cap{font:.78rem/1.5 var(--mono);color:var(--muted);padding:8px 0 0;max-width:70ch}
-.phase{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.phase canvas{display:block;width:100%;height:auto;aspect-ratio:1;max-width:100%;background:var(--bg-2)}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-top:0;font:.74rem/1.4 var(--mono)}
-.steps span{background:var(--bg);padding:8px 10px;color:var(--muted)}
-.steps span.on{color:var(--fg);box-shadow:inset 0 1px 0 var(--accent)}
-.ctrls{display:flex;gap:18px;align-items:end;flex-wrap:wrap;font:.78rem/1.4 var(--mono);color:var(--muted);margin-top:12px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
-.seg button{font:.8rem var(--mono);padding:5px 12px;border:0;border-right:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
-.seg button:last-child{border-right:0}
-.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.ctrls input[type=range]{display:block;width:170px;accent-color:var(--accent);margin-top:6px}
+.protocol{display:block;width:100%;height:auto;max-width:100%;aspect-ratio:16/9;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
 .btn{font:.78rem var(--mono);background:none;border:1px solid var(--line);border-radius:3px;padding:6px 10px;color:var(--fg);cursor:pointer}
 .btn:hover{border-color:var(--accent)}
 .figgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media (max-width:600px){.figgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.phase{grid-template-columns:1fr}}
+@media (max-width:600px){.figgrid{grid-template-columns:1fr}}
 
 /* education + terminus */
 .kv{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:10px 12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.95rem}
@@ -191,12 +181,13 @@ header{border-bottom:0;padding-bottom:8px}
       <h3>The sensing protocol in phase space</h3>
       <p>Prepare the motion, let the signal displace it by β, split the two spin branches by ±α with a spin-dependent force, measure the qubit. The whole measurement reduces to one number, the qubit coherence <span class="math">C = V e<sup>−iΦ</sup></span>: Φ carries the signal, V is how much the branches still overlap.</p>
       <div class="fig">
-        <div class="phase"><canvas id="cvA" width="440" height="440" role="img" aria-label="Wigner function of the prepared state"></canvas><canvas id="cvB" width="440" height="440" role="img" aria-label="Wigner function after signal and spin-dependent force"></canvas></div>
-        <div class="steps" id="steps"><span>00 prepare S(r)|n⟩</span><span>01 signal β</span><span>02 force ±α</span><span>03 read qubit</span></div>
-        <div class="ctrls"><div>fock n<br><div class="seg" id="segN" role="group" aria-label="Fock number"></div></div><div><label for="rr">squeeze r = <output id="rO" for="rr">0.50</output></label><input id="rr" type="range" min="0" max="1.2" step="0.05" value="0.5"></div><button class="btn" id="replay" type="button">replay</button></div>
-        <div class="cap">drawn live in the browser. red positive, blue negative. x is the quadrature the signal moves, p the one the force probes.</div>
+        <video id="demo" class="protocol" controls autoplay muted loop playsinline preload="metadata" poster="poster.jpg" aria-label="Animation of the sensing protocol: a squeezed Fock state is displaced by the signal, split into two spin branches by the spin-dependent force, and read out on the qubit">
+          <source src="sensing-protocol.mp4" type="video/mp4">
+          Your browser cannot play this video. It shows the four steps of the protocol in phase space.
+        </video>
+        <div class="cap">rendered from the same Wigner-function math as the simulations. red positive, blue negative. x is the quadrature the signal moves, p the one the force probes. n = 1, r = 0.3, β = 0.9, α = 1.2.</div>
       </div>
-      <div class="tags"><span>canvas</span><span>no libraries</span></div>
+      <div class="tags"><span>wigner functions</span><span>numpy</span><span>ffmpeg</span></div>
     </div>
   </div>
   <div class="node">
@@ -448,38 +439,11 @@ header{border-bottom:0;padding-bottom:8px}
 (function(){
 var $=function(i){return document.getElementById(i)};
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
-function hexrgb(h){return [parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)]}
-function lag(n,x){if(n===0)return 1;var a=1,b=1-x;for(var k=1;k<n;k++){var c=((2*k+1-x)*b-k*a)/(k+1);a=b;b=c}return b}
-function wn(n,u,v){var s=u*u+v*v;return (n%2?-1:1)/Math.PI*Math.exp(-s)*lag(n,2*s)}
-var st={n:1,r:0.5},N=140,R=4.5,off=document.createElement('canvas');off.width=off.height=N;
-function heat(cv,fn,vm,marks){
-  var o=off.getContext('2d'),im=o.createImageData(N,N),bg=hexrgb(css('--bg-2')),P=css('--wpos').split(',').map(Number),Q=css('--wneg').split(',').map(Number);
-  for(var j=0;j<N;j++)for(var i=0;i<N;i++){var W=fn(-R+2*R*i/(N-1),R-2*R*j/(N-1)),t=Math.max(-1,Math.min(1,W/vm)),k=(j*N+i)*4,c=t>=0?P:Q,s=Math.abs(t);
-    im.data[k]=bg[0]+(c[0]-bg[0])*s;im.data[k+1]=bg[1]+(c[1]-bg[1])*s;im.data[k+2]=bg[2]+(c[2]-bg[2])*s;im.data[k+3]=255}
-  o.putImageData(im,0,0);var c2=cv.getContext('2d'),w=cv.width,h=cv.height;c2.imageSmoothingEnabled=true;c2.clearRect(0,0,w,h);c2.drawImage(off,0,0,w,h);
-  c2.strokeStyle='rgba(140,134,122,.35)';c2.lineWidth=1;c2.beginPath();c2.moveTo(w/2,0);c2.lineTo(w/2,h);c2.moveTo(0,h/2);c2.lineTo(w,h/2);c2.stroke();
-  c2.font='13px '+css('--mono');c2.fillStyle=css('--muted');c2.textAlign='right';c2.fillText('x',w-10,h/2-8);c2.textAlign='left';c2.fillText('p',w/2+8,18);
-  (marks||[]).forEach(function(m){var x=(m[0]+R)/(2*R)*w,y=(R-m[1])/(2*R)*h;c2.strokeStyle=css('--fg');c2.lineWidth=1.3;c2.beginPath();c2.arc(x,y,5,0,6.3);c2.stroke();c2.fillStyle=css('--fg');c2.textAlign='left';c2.fillText(m[2],Math.min(x+10,w-60),Math.max(16,Math.min(y-9,h-8)))});
-}
-var BETA=1.0,ALPHA=1.0;
-function drawA(){var n=st.n,r=st.r;heat($('cvA'),function(x,p){return wn(n,x*Math.exp(r),p*Math.exp(-r))},0.25)}
-function drawB(b,a){var n=st.n,r=st.r,xs=Math.SQRT2*b,ps=Math.SQRT2*a,Ws=function(x,p){return wn(n,x*Math.exp(r),p*Math.exp(-r))};
-  heat($('cvB'),function(x,p){return a>0.02?0.5*(Ws(x-xs,p-ps)+Ws(x-xs,p+ps)):Ws(x-xs,p)},a>0.02?0.2:0.25,a>0.05?[[xs,ps,'+'],[xs,-ps,'−']]:[])}
-var steps=$('steps').children,raf=null;
-function setStep(i){for(var k=0;k<steps.length;k++)steps[k].classList.toggle('on',k===i)}
-function play(){cancelAnimationFrame(raf);drawA();if(reduce){drawB(BETA,ALPHA);setStep(3);return}
-  var t0=performance.now(),D1=800,D2=1000,D3=900;function ease(u){return u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2}
-  function frame(now){var t=now-t0;
-    if(t<D1){setStep(0);drawB(0,0)}else if(t<D1+D2){setStep(1);drawB(BETA*ease((t-D1)/D2),0)}
-    else if(t<D1+D2+D3){setStep(2);drawB(BETA,ALPHA*ease((t-D1-D2)/D3))}else{drawB(BETA,ALPHA);setStep(3);return}
-    raf=requestAnimationFrame(frame)}
-  raf=requestAnimationFrame(frame)}
-var seg=$('segN');[0,1,2,3].forEach(function(n){var b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('aria-pressed',n===st.n);
-  b.addEventListener('click',function(){st.n=n;[].forEach.call(seg.children,function(x,i){x.setAttribute('aria-pressed',i===n)});play()});seg.appendChild(b)});
-$('rr').addEventListener('input',function(){st.r=+this.value;$('rO').textContent=st.r.toFixed(2);drawA();drawB(BETA,ALPHA);setStep(3)});
-$('replay').addEventListener('click',play);
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){drawA();drawB(BETA,ALPHA)});
+/* protocol video: honour reduced motion, and don't run it off-screen */
+var vid=$('demo');
+if(vid){if(reduce){vid.removeAttribute('autoplay');vid.pause()}
+  vid.addEventListener('error',function(){vid.insertAdjacentHTML('afterend','<div class="cap">The protocol animation could not load. <a href="sensing-protocol.mp4">Open the video file</a>.</div>');vid.remove()})}
+function videoFor(view){if(!vid)return;if(view==='research'){if(!reduce&&vid.paused)vid.play().catch(function(){})}else vid.pause()}
 
 /* rotating headline */
 var lines=['I work out how precisely a single trapped ion can measure a force, and how noise changes the best way to prepare it.',
@@ -492,7 +456,7 @@ var views=['research','work','projects','background'],navs=[].slice.call(documen
 var current='research';
 function show(h,scroll){if(views.indexOf(h)<0)h='research';current=h;
   views.forEach(function(v){$(v).classList.toggle('on',v===h)});navs.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+h)});
-  if(scroll)window.scrollTo(0,0);if(h==='research'){drawA();drawB(BETA,ALPHA);setStep(3)}
+  if(scroll)window.scrollTo(0,0);videoFor(h);
   try{if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}catch(e){}}
 function route(scroll){show(location.hash.slice(1),scroll)}
 /* click handling does not rely on the browser changing the hash, which some embeds block */
@@ -524,7 +488,6 @@ $('askf').addEventListener('submit',function(e){e.preventDefault();var t=inp.val
   QA.forEach(function(q){var h=(q[0]+' '+q[1]).toLowerCase(),s=0;words.forEach(function(w){if(h.indexOf(w)>-1)s++});if(s>bs){bs=s;best=q}});
   if(best)answer(best);else ans.textContent='No scripted answer for that. The questions above cover what this page can answer; for anything else, email me at jewoopark03@gmail.com.'});
 
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if($('research').classList.contains('on'))play()});else play();
 })();
 </script>
 
